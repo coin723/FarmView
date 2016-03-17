@@ -4,6 +4,7 @@
 
 * {
     font-family: 'Nanum Barun Gothic';
+    box-sizing: border-box;
 }
 
 img {
@@ -16,62 +17,62 @@ img {
     display: none;
 }
 
-#container {
+#photosphere {
     width: 100%;
     height: 90vh;
 }
 
-    #container div.psv-panel {
+    #photosphere div.psv-panel {
         min-width: 40vw;
         max-width: 85vw;
     }
 
-    #container div.psv-panel div.graph {
+    #photosphere div.psv-panel div.graph {
         width: 100%;
         height: auto;
     }
 
-    #container div.psv-panel img.graph {
+    #photosphere div.psv-panel img.graph {
         width: 100%;
         height: 230px;
         min-height: 25vh;
     }
 
-    #container div.psv-panel img {
+    #photosphere div.psv-panel img {
         height: 16px;
         width: auto;
     }
 
-        #container div.psv-panel div.panel {
+        #photosphere div.psv-panel div.panel {
             background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0));
             height: auto;
             padding-left: 16px;
             padding-top: 2.5vmin;
         }
 
-            #container div.psv-panel div.panel span.infoTitle {
+            #photosphere div.psv-panel div.panel span.infoTitle {
                 color: black;
             }
 
-        #container div.psv-panel div.panel div.inline {
+        #photosphere div.psv-panel div.panel div.inline {
             width: 100%;
             height: 65px;
         }
 
-            #container div.psv-panel div.panel div.inline div {
+            #photosphere div.psv-panel div.panel div.inline div {
                 float: left;
                 margin-right: 8px;
             }
 
-        #container div.psv-panel div.panel div.graph {
+        #photosphere div.psv-panel div.panel div.graph {
             display: block;
         }
 
-    #container div.psv-hud {
+    #photosphere div.psv-hud {
         perspective: 400px;
     }
 
-        #container div.psv-hud div.psv-marker {
+        #photosphere div.psv-hud div.psv-marker {
             justify-content: center;
             align-items: center;
             background: rgba(255,255,255,0.4);
@@ -81,39 +82,39 @@ img {
             color: white;
         }
 
-        #container div.psv-hud div.psv-marker > div {
+        #photosphere div.psv-hud div.psv-marker > div {
             margin-left: auto;
             margin-right: auto;
             margin-top: 1vmin;
         }
 
-        #container div.psv-hud div.psv-marker .informValue {
+        #photosphere div.psv-hud div.psv-marker .informValue {
             font-size: 5vmin;
             min-width: 27vmin;
             padding: 3vmin;
             text-align: center;
         }
 
-        #container div.psv-hud div.psv-marker .currentValue {
+        #photosphere div.psv-hud div.psv-marker .currentValue {
             font-size: 3em;
         }
 
-    #container div.psv-container {
+    #photosphere div.psv-container {
         background: url('http://mannacea.com/design/mannacea/pattern_01.png') #013e22;
     }
 
-    #container div.psv-navbar div.caption {
+    #photosphere div.psv-navbar div.caption {
         float: left;
     }
 
-        #container div.psv-navbar div.caption div {
+        #photosphere div.psv-navbar div.caption div {
             display: inline-block;
             padding-right: 15px;
             opacity: 0.7;
             cursor: pointer;
         }
 
-        #container div.psv-navbar div.caption img {
+        #photosphere div.psv-navbar div.caption img {
             width: 20px;
             height: auto;
         }
