@@ -1,0 +1,217 @@
+@import url(//cdn.jsdelivr.net/font-nanum/1.0/nanumbarungothic/nanumbarungothic.css);
+
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+
+* {
+    font-family: 'Nanum Barun Gothic';
+}
+
+img {
+    width: auto;
+    height: 12vmin;
+    max-height: 20vw;
+}
+
+.preparing-content {
+    display: none;
+}
+
+#container {
+    width: 100%;
+    height: 90vh;
+}
+
+    #container div.psv-panel {
+        min-width: 40vw;
+        max-width: 85vw;
+    }
+
+    #container div.psv-panel div.graph {
+        width: 100%;
+        height: auto;
+    }
+
+    #container div.psv-panel img.graph {
+        width: 100%;
+        height: 230px;
+        min-height: 25vh;
+    }
+
+    #container div.psv-panel img {
+        height: 16px;
+        width: auto;
+    }
+
+        #container div.psv-panel div.panel {
+            background: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0));
+            height: auto;
+            padding-left: 16px;
+            padding-top: 2.5vmin;
+        }
+
+            #container div.psv-panel div.panel span.infoTitle {
+                color: black;
+            }
+
+        #container div.psv-panel div.panel div.inline {
+            width: 100%;
+            height: 65px;
+        }
+
+            #container div.psv-panel div.panel div.inline div {
+                float: left;
+                margin-right: 8px;
+            }
+
+        #container div.psv-panel div.panel div.graph {
+            display: block;
+        }
+
+    #container div.psv-hud {
+        perspective: 400px;
+    }
+
+        #container div.psv-hud div.psv-marker {
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.4);
+            background-size: 100%;
+            width: 50vw;
+            max-width: 75vmin;
+            color: white;
+        }
+
+        #container div.psv-hud div.psv-marker > div {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1vmin;
+        }
+
+        #container div.psv-hud div.psv-marker .informValue {
+            font-size: 5vmin;
+            min-width: 27vmin;
+            padding: 3vmin;
+            text-align: center;
+        }
+
+        #container div.psv-hud div.psv-marker .currentValue {
+            font-size: 3em;
+        }
+
+    #container div.psv-container {
+        background: url('http://mannacea.com/design/mannacea/pattern_01.png') #013e22;
+    }
+
+    #container div.psv-navbar div.caption {
+        float: left;
+    }
+
+        #container div.psv-navbar div.caption div {
+            display: inline-block;
+            padding-right: 15px;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        #container div.psv-navbar div.caption img {
+            width: 20px;
+            height: auto;
+        }
+
+.outerCircle {
+    margin-top: 1vmin;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    width: 12vmin;
+    height: 12vmin;
+    max-width: 20vw;
+    max-height: 20vw;
+    border-radius: 50%;
+    padding: 2vh;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.outerCircle.airTemp.high {
+    background-color: #EA4A42;
+}
+
+.outerCircle.airTemp.med_high {
+    background-color: #E88643;
+}
+
+.outerCircle.airTemp.medium {
+    background-color: #A3D850;
+}
+
+.outerCircle.airTemp.med_low {
+    background-color: #7FE1E5;
+}
+
+.outerCircle.visibleLight.high {
+    background-color: #EA4A42;
+}
+
+.outerCircle.visibleLight.medium {
+    background-color: #F2CF2D;
+}
+
+.outerCircle.visibleLight.low {
+    background-color: #11252D;
+}
+
+.outerCircle.DO.good {
+    background-color: #68BFEA;
+}
+
+.outerCircle.DO.bad {
+    background-color: #9A9EA0;
+}
+
+.outerCircle div {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.outerCircle .circularMask {
+    border-radius: 50%;
+    overflow: hidden;
+    background-image: url('sun.png');
+    background-position: 50% 50%;
+    background-size: 12vmin 12vmin;
+}
+
+.outerCircle .circularMask.high {
+    width: 100%;
+    height: 100%;
+}
+
+.outerCircle .circularMask.medium {
+    width: 90%;
+    height: 90%;
+}
+
+.outerCircle .circularMask.low {
+    width: 65%;
+    height: 65%;
+}
+
+.outerCircle .oxygen {
+    font-size: 8vmin;
+    color: white;
+    font-weight: bold;
+}
+
+    .outerCircle .oxygen p {
+        font-family: 'Ubuntu';
+    }
+
+.tempHide {
+    display: none !important;
+}
