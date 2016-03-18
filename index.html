@@ -1,28 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
         <link rel="stylesheet" href="https://cdn.rawgit.com/mistic100/Photo-Sphere-Viewer/master/dist/photo-sphere-viewer.min.css" />
         
         <link rel="stylesheet" href="css/stylesheet.css" />
+        <script src="https://cdn.rawgit.com/malko/D.js/master/lib/D.min.js"></script>
         <script src="https://cdn.rawgit.com/mrdoob/three.js/master/build/three.js"></script>
+<!--        <script src="js/three.js"></script>-->
         <!--[if IE]>
         <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/renderers/CanvasRenderer.js"></script>
         <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/renderers/Projector.js"></script>
         <!--[endif]-->
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/EffectComposer.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/RenderPass.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/ShaderPass.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/MaskPass.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/shaders/CopyShader.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/DeviceOrientationControls.js"></script>
         <script src="https://cdn.rawgit.com/mistic100/Photo-Sphere-Viewer/master/dist/photo-sphere-viewer.js"></script>
         
+<!--
         <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+-->
         
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-        <script src="app.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
+        
+<!--        <script src="app.js"></script>-->
+        
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+            }
+            
+            #photosphere {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .psv-button.custom-button {
+                font-size: 18px;
+            }
+        </style>
     </head>
     <body>
         <div id="photosphere"></div>
         <script>
-            var viewer = PhotoSphereViewer({});
+            var container = document.querySelector("#photosphere");
+            var viewer = PhotoSphereViewer({
+                container: container,
+                panorama: 'image/farm/farm_bright_04.jpeg',
+                markers: (function() {
+                    var a = [];
+                    a.push({
+                        id: 'first-polygon',
+                        polygon_rad: [0,0, Math.PI/2,0, 0,Math.PI/6],
+                        style: {
+                            fill: "rgba(255, 255, 0, 0.4)",
+                            stroke: "none"
+                        },
+                        content: "This is panel content"
+                    });
+                    
+                    a.push({
+                        id: 'waterTemp',
+                        html: 'Text marker',
+                        content: "hidden panel content",
+                        latitude: 0,
+                        longitude: 0,
+                        className: 'popup',
+                        visible: false
+                    });
+                    
+                    return a;
+                }()),
+                caption: 'FarmView &copy <img src="image/gnb_logo_white.png" />',
+                navbar: [
+                    'autorotate', 'zoom',
+                    {
+                        title: '수온',
+                        className: 'custom-button',
+                        content: '수온',
+                        onClick: (function() {
+                            return function() {
+                                viewer.hud.psv.trigger('select-marker', viewer.getMarker('waterTemp'));
+                                
+                                if(window.innerWidth / window.innerHeight >= 1) {
+                                    var markerLat = currentPos.latitude;
+                                    var markerLong = currentPos.longitude - Math.PI / 6;
+                                } else {
+                                    console.log("vertical case");
+                                    var markerLat = currentPos.latitude - Math.PI / 12;
+                                    var markerLong = currentPos.longitude;
+                                }
+                                
+                                viewer.updateMarker({
+                                    id: 'waterTemp',
+                                    latitude: markerLat,
+                                    longitude: markerLong,
+                                    visible: true
+                                });
+                                
+                                setTimeout(function(){
+                                    viewer.showPanel(viewer.getMarker('waterTemp').content);
+                                }, 500);
+                            }
+                        }())
+                    },
+                    'caption', 'gyroscope', 'fullscreen'
+                ]
+            });
+            
+            var popupMarkers = [];
+            
+            var currentPos = {
+                longitude: new Number(),
+                latitude: new Number()
+            };
+            
+            viewer.on('ready', function() {
+                currentPos.longitude = viewer.config.longitude !== undefined ? viewer.config.longitude : viewer.config.default_long;
+                currentPos.latitude = viewer.config.latitude !== undefined ? viewer.config.latitude : viewer.config.default_lat;
+                
+                popupMarkers = Object.keys(viewer.hud.markers).filter(function(element) {
+                    var currentMarker = viewer.getMarker(element);
+                    if(currentMarker.className && currentMarker.className.match(/popup/)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            });
+            
+            viewer.on('position-updated', function(pos) {
+                currentPos = pos;
+            });
+            
+            viewer.on('close-panel', function() {
+                viewer.hud.psv.trigger('unselect-marker');
+            });
+            
+            viewer.on('unselect-marker', function() {
+                popupMarkers.forEach(function(element) {
+                    viewer.updateMarker({
+                        id: element,
+                        visible: false
+                    });
+                });
+            });
         </script>
     </body>
 </html>
