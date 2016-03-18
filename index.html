@@ -55,6 +55,33 @@
         <div id="photosphere"></div>
         <script>
             var container = document.querySelector("#photosphere");
+            
+            function showPopup(markerID) {
+                return function() {
+                    viewer.hud.psv.trigger('select-marker', viewer.getMarker(markerID));
+
+                    if(window.innerWidth / window.innerHeight >= 1) {
+                        var markerLat = currentPos.latitude;
+                        var markerLong = currentPos.longitude - Math.PI / 8;
+                    } else {
+                        console.log("vertical case");
+                        var markerLat = currentPos.latitude + Math.PI / 8;
+                        var markerLong = currentPos.longitude;
+                    }
+
+                    viewer.updateMarker({
+                        id: markerID,
+                        latitude: markerLat,
+                        longitude: markerLong,
+                        visible: true
+                    });
+
+                    setTimeout(function(){
+                        viewer.showPanel(viewer.getMarker(markerID).content);
+                    }, 500);
+                }
+            }
+            
             var viewer = PhotoSphereViewer({
                 container: container,
                 panorama: 'image/farm/farm_bright_04.jpeg',
@@ -62,7 +89,7 @@
                     var a = [];
                     a.push({
                         id: 'first-polygon',
-                        polygon_rad: [0,0, Math.PI/2,0, 0,Math.PI/6],
+                        polygon_rad: [Math.PI*11/12,0, Math.PI/12,0, 0,Math.PI/6],
                         style: {
                             fill: "rgba(255, 255, 0, 0.4)",
                             stroke: "none"
@@ -72,8 +99,38 @@
                     
                     a.push({
                         id: 'waterTemp',
-                        html: 'Text marker',
-                        content: "hidden panel content",
+                        html: '수온 마커',
+                        content: '<div><img src="http://52.79.130.102:8888/waterTemp.png" /></div>hidden panel content',
+                        latitude: 0,
+                        longitude: 0,
+                        className: 'popup',
+                        visible: false
+                    });
+                    
+                    a.push({
+                        id: 'visibleLight',
+                        html: '가시광선 마커',
+                        content: '<div><img src="http://52.79.130.102:8888/visibleLight.png" /></div>hidden panel content',
+                        latitude: 0,
+                        longitude: 0,
+                        className: 'popup',
+                        visible: false
+                    });
+                    
+                    a.push({
+                        id: 'DO',
+                        html: '용존산소량 마커',
+                        content: '<div><img src="http://52.79.130.102:8888/DO.png" /></div>hidden panel content',
+                        latitude: 0,
+                        longitude: 0,
+                        className: 'popup',
+                        visible: false
+                    });
+                    
+                    a.push({
+                        id: 'airTemp',
+                        html: '기온 마커',
+                        content: '<div><img src="http://52.79.130.102:8888/airTemp.png" /></div>hidden panel content',
                         latitude: 0,
                         longitude: 0,
                         className: 'popup',
@@ -86,34 +143,28 @@
                 navbar: [
                     'autorotate', 'zoom',
                     {
-                        title: '수온',
+                        title: 'Water temperature',
                         className: 'custom-button',
                         content: '수온',
-                        onClick: (function() {
-                            return function() {
-                                viewer.hud.psv.trigger('select-marker', viewer.getMarker('waterTemp'));
-                                
-                                if(window.innerWidth / window.innerHeight >= 1) {
-                                    var markerLat = currentPos.latitude;
-                                    var markerLong = currentPos.longitude - Math.PI / 6;
-                                } else {
-                                    console.log("vertical case");
-                                    var markerLat = currentPos.latitude - Math.PI / 12;
-                                    var markerLong = currentPos.longitude;
-                                }
-                                
-                                viewer.updateMarker({
-                                    id: 'waterTemp',
-                                    latitude: markerLat,
-                                    longitude: markerLong,
-                                    visible: true
-                                });
-                                
-                                setTimeout(function(){
-                                    viewer.showPanel(viewer.getMarker('waterTemp').content);
-                                }, 500);
-                            }
-                        }())
+                        onClick: showPopup('waterTemp')
+                    },
+                    {
+                        title: 'Visible light',
+                        className: 'custom-button',
+                        content: '햇빛',
+                        onClick: showPopup('visibleLight')
+                    },
+                    {
+                        title: 'DO',
+                        className: 'custom-button',
+                        content: 'DO',
+                        onClick: showPopup('DO')
+                    },
+                    {
+                        title: 'Air temperature',
+                        className: 'custom-button',
+                        content: '기온',
+                        onClick: showPopup('airTemp')
                     },
                     'caption', 'gyroscope', 'fullscreen'
                 ]
