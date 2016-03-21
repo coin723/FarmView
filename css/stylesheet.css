@@ -14,15 +14,51 @@ body {
     font-family: 'Nanum Barun Gothic';
 }
 
-.psv-navbar .psv-button.custom-button {
+.psv-navbar .psv-button.compressed-button {
+    display: none;
+}
+
+.psv-navbar .psv-button.custom-button{
     width: auto;
 }
 
-@media screen and (max-aspect-ratio: 1/1) {
-    .psv-container.has-navbar .psv-panel {
-        max-height: 70vh;
-        top: calc(30vh - 40px);
-    }
+.psv-navbar .psv-button.custom-button {
+    text-align: center;
+    transform: scale(1);
+    transition: transform .3s ease;
+}
+
+.psv-navbar .psv-button.custom-button:hover {
+    transform: scale(1.2);
+}
+
+.psv-navbar .psv-button.compressed-button:hover svg {
+    transform: scale(1.2);
+}
+
+.psv-hud .psv-marker.popup {
+    padding: 1em;
+    background-color: rgba(61, 61, 61, .5);
+    color: rgba(255, 255, 255, .7);
+    font-size: 3em;
+    text-align: center;
+}
+
+.psv-hud .psv-marker.popup .circle {
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    padding: .3em;
+    background-color: aqua;
+}
+
+.psv-hud .psv-marker.popup .circle img {
+    width: 4em;
+    height: auto;
+}
+
+.psv-panel {
+    min-width: 40vw;
 }
 
 .psv-panel .content {
@@ -32,4 +68,27 @@ body {
 .psv-panel .content img {
     width: 100%;
     height: auto;
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+    .psv-hud .psv-marker.popup:not(.svg-marker) {
+        display: none;
+}
+
+@media (max-width: 400px) {
+    .psv-navbar .psv-button.custom-button {
+        display: none;
+    }
+    
+    .psv-navbar .psv-button.compressed-button {
+        display: block;
+    }
+    
+    .psv-navbar .psv-button.custom-button.phase {
+        display: block;
+    }
+    
+    .psv-navbar .psv-button.compressed-button.phase {
+        display: none;
+    }
 }
