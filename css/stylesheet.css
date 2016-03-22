@@ -10,6 +10,52 @@ body {
     font-family: 'Nanum Barun Gothic';
 }
 
+.floating {
+    top: 30%;
+    position: absolute;
+    transition: all 1s ease-in;
+}
+
+.floating.waterTemp {
+    left: 10%;
+}
+
+.floating.visibleLight {
+    left: 30%;
+}
+
+.floating.DO {
+    left: 50%;
+}
+
+.floating.airTemp {
+    left: 70%;
+}
+
+.floating.disappear {
+    transform: scale(0);
+}
+
+.floating.disappear {
+    top: calc(100% - 200px);
+}
+
+.floating.waterTemp.disappear {
+    left: 60px;
+}
+
+.floating.visibleLight.disappear {
+    left: 110px;
+}
+
+.floating.DO.disappear {
+    left: 160px;
+}
+
+.floating.airTemp.disappear {
+    left: 210px;
+}
+
 .psv-navbar .psv-caption {
     font-family: 'Nanum Barun Gothic';
 }
@@ -18,43 +64,74 @@ body {
     display: none;
 }
 
-.psv-navbar .psv-button.custom-button{
-    width: auto;
-}
-
 .psv-navbar .psv-button.custom-button {
+    width: auto;
     text-align: center;
     transform: scale(1);
-    transition: transform .3s ease;
-}
-
-.psv-navbar .psv-button.custom-button:hover {
-    transform: scale(1.2);
+    transition: transform .3s ease, text-shadow 1s ease;
 }
 
 .psv-navbar .psv-button.compressed-button:hover svg {
     transform: scale(1.2);
 }
 
-.psv-hud .psv-marker.popup {
+.psv-navbar .psv-button.custom-button:hover {
+    transform: scale(1.2);
+}
+
+.psv-navbar .psv-button.custom-button.on[title="Water temperature"] {
+    text-shadow: 0px 0px 8px aqua, 0px 0px 8px aqua;
+}
+
+.psv-navbar .psv-button.custom-button.on[title="Visible light"] {
+    text-shadow: 0px 0px 8px yellow, 0px 0px 8px yellow;
+}
+
+.psv-navbar .psv-button.custom-button.on[title="DO"] {
+    text-shadow: 0px 0px 8px lime, 0px 0px 8px lime;
+}
+
+.psv-navbar .psv-button.custom-button.on[title="Air temperature"] {
+    text-shadow: 0px 0px 8px white, 0px 0px 8px white;
+}
+
+.psv-hud .psv-marker.popup, .floating {
     padding: 1em;
-    background-color: rgba(61, 61, 61, .5);
-    color: rgba(255, 255, 255, .7);
     font-size: 3em;
     text-align: center;
 }
 
-.psv-hud .psv-marker.popup .circle {
+.psv-hud .psv-marker.popup .circle, .floating .circle {
     width: 5em;
     height: 5em;
     border-radius: 50%;
     padding: .3em;
+}
+
+.circle.waterTemp {
     background-color: aqua;
 }
 
-.psv-hud .psv-marker.popup .circle img {
-    width: 4em;
-    height: auto;
+.circle.visibleLight {
+    background-color: #F2CF2D;
+}
+
+.circle.DO {
+    background-color: #68BFEA;
+}
+
+.circle.airTemp {
+    background-color: #A3D850;
+}
+
+.psv-hud .psv-marker.popup p, .floating p {
+    color: white;
+    text-shadow: 0px 0px 16px black;
+}
+
+.psv-hud .psv-marker.popup .circle img , .floating .circle img {
+    width: auto;
+    height: 4em;
 }
 
 .psv-panel {

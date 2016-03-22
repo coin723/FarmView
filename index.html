@@ -24,10 +24,8 @@
         <script src="https://cdn.rawgit.com/mistic100/uEvent/master/uevent.min.js"></script>
         <script src="https://cdn.rawgit.com/mistic100/Photo-Sphere-Viewer/master/dist/photo-sphere-viewer.js"></script>
         
-<!--
         <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
--->
+        <script src="http://code.jquery.com/jquery-2.2.2.min.js"></script>
         
         <style>
             html, body {
@@ -57,9 +55,9 @@
                     a.push({
                         id: 'waterTemp',
                         html: createPopup('waterTemp'),
-                        content: '<div><img src="http://52.79.130.102:8888/waterTemp.png" /></div>hidden panel content',
+                        content: '<div><img src="http://52.79.130.102:8888/waterTemp.png" /></div>',
                         latitude: 0,
-                        longitude: 0,
+                        longitude: Math.PI,
                         className: 'popup',
                         visible: false
                     });
@@ -67,9 +65,9 @@
                     a.push({
                         id: 'visibleLight',
                         html: createPopup('visibleLight'),
-                        content: '<div><img src="http://52.79.130.102:8888/visibleLight.png" /></div>hidden panel content',
-                        latitude: 0,
-                        longitude: 0,
+                        content: '<div><img src="http://52.79.130.102:8888/visibleLight.png" /></div>',
+                        latitude: Math.PI / 4,
+                        longitude: Math.PI / 2,
                         className: 'popup',
                         visible: false
                     });
@@ -77,9 +75,9 @@
                     a.push({
                         id: 'DO',
                         html: createPopup('DO'),
-                        content: '<div><img src="http://52.79.130.102:8888/DO.png" /></div>hidden panel content',
+                        content: '<div><img src="http://52.79.130.102:8888/DO.png" /></div>',
                         latitude: 0,
-                        longitude: 0,
+                        longitude: Math.PI / 2,
                         className: 'popup',
                         visible: false
                     });
@@ -87,9 +85,9 @@
                     a.push({
                         id: 'airTemp',
                         html: createPopup('airTemp'),
-                        content: '<div><img src="http://52.79.130.102:8888/airTemp.png" /></div>hidden panel content',
-                        latitude: 0,
-                        longitude: 0,
+                        content: '<div><img src="http://52.79.130.102:8888/airTemp.png" /></div>',
+                        latitude: Math.PI / 4,
+                        longitude: Math.PI * 3 / 2,
                         className: 'popup',
                         visible: false
                     });
@@ -109,25 +107,25 @@
                         title: 'Water temperature',
                         className: 'custom-button',
                         content: '수온',
-                        onClick: showPopup('waterTemp')
+                        onClick: togglePopup('waterTemp')
                     },
                     {
                         title: 'Visible light',
                         className: 'custom-button',
                         content: '햇빛',
-                        onClick: showPopup('visibleLight')
+                        onClick: togglePopup('visibleLight')
                     },
                     {
                         title: 'DO',
                         className: 'custom-button',
                         content: 'DO',
-                        onClick: showPopup('DO')
+                        onClick: togglePopup('DO')
                     },
                     {
                         title: 'Air temperature',
                         className: 'custom-button',
                         content: '기온',
-                        onClick: showPopup('airTemp')
+                        onClick: togglePopup('airTemp')
                     },
                     'caption', 'gyroscope', 'fullscreen'
                 ]
@@ -140,7 +138,13 @@
                 latitude: new Number()
             };
             
+            var customButtons;
+            
             PSV.on('ready', function() {
+                customButtons = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
+                
+                blinkButtons();
+                
                 currentPos.longitude = PSV.config.longitude !== undefined ? PSV.config.longitude : PSV.config.default_long;
                 currentPos.latitude = PSV.config.latitude !== undefined ? PSV.config.latitude : PSV.config.default_lat;
                 
@@ -152,15 +156,28 @@
                         return false;
                     }
                 });
+                
+                popupMarkers.forEach(function(element) {
+                    console.log(element);
+                    var newDiv = document.createElement("div");
+                    newDiv.classList.add("floating", element);
+                    newDiv.innerHTML = createPopup(element);
+                    document.querySelector("#photosphere").appendChild(newDiv);
+                });
+                
+                setTimeout(function() {
+                    var floatings = document.querySelectorAll(".floating");
+                    for(i = 0; i < floatings.length; i++) {
+                        floatings[i].classList.add("disappear");
+                    }
+                }, 1000);
             });
             
             PSV.on('click', function() {
                 document.querySelector(".psv-navbar .psv-button.compressed-button").classList.remove("phase");
 
-                var btn = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
-
-                for(i = 0; i < btn.length; i++) {
-                    btn[i].classList.remove("phase");
+                for(i = 0; i < customButtons.length; i++) {
+                    customButtons[i].classList.remove("phase");
                 }
             });
             
@@ -182,27 +199,34 @@
             });
             
             function createPopup(markerID) {
-                return '<div class="circle"><img src="image/icon_waterTemp.png" /></div><div>' + markerID + '</div>';
+                return '<div class="circle ' + markerID + '"><img src="image/icon_' + markerID + '.png" /></div><div></div>';
             }
             
-            function showPopup(markerID) {
+            function togglePopup(markerID) {
                 return function() {
-                    PSV.hidePanel();
-                    PSV.hud.psv.trigger('unselect-marker');
-                    
-                    PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
-
-                    var markerLat = currentPos.latitude;
-                    var markerLong = currentPos.longitude - Math.PI / 8;
+                    if(PSV.getCurrentMarker() !== null && document.querySelector("#psv-marker-" + markerID).classList.contains("visible")) {
+                        PSV.hidePanel();
+                        PSV.hud.psv.trigger('unselect-marker');
+                    } else {
+                        if(PSV.getCurrentMarker() !== null && PSV.getCurrentMarker().id !== markerID) {
+                            PSV.hidePanel();
+                        }
                         
-                    PSV.updateMarker({
-                        id: markerID,
-                        latitude: markerLat,
-                        longitude: markerLong,
-                        visible: true
-                    });
+                        PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
+                    
+                        PSV.gotoMarker(markerID, 500);
 
-                    PSV.showPanel(PSV.getMarker(markerID).content);
+                        PSV.updateMarker({
+                            id: markerID,
+                            visible: true
+                        });
+
+                        setTimeout(function(){
+                            PSV.showPanel(PSV.getMarker(markerID).content);
+
+                            PSV.hud.currentMarker = PSV.getMarker(markerID);
+                        }, 500);
+                    }
                 }
             }
             
@@ -210,12 +234,18 @@
                 return function() {
                     document.querySelector(".psv-navbar .psv-button.compressed-button").classList.add("phase");
 
-                    var btn = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
-
-                    for(i = 0; i < btn.length; i++) {
+                    for(i = 0; i < customButtons.length; i++) {
                         btn[i].classList.add("phase");
                     }
                 }
+            }
+            
+            function blinkButtons() {
+                setInterval(function() {
+                    for(i = 0; i < customButtons.length; i++) {
+                        customButtons[i].classList.toggle("on");
+                    }
+                }, 1000);
             }
         </script>
     </body>
