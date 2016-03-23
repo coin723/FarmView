@@ -60,13 +60,13 @@
             function psvScript() {
                 var container = document.querySelector("#photosphere");
 
-                var iframeHeight = 400 >= window.innerWidth * 2 / 5 ? 
-                    (
-                        window.innerWidth - 24 < 400 ? 
-                        (window.innerWidth - 24) * 27 / 40 : 
-                        276
-                    ) : 
-                    window.innerWidth * 6 / 25;
+//                var iframeHeight = 400 >= window.innerWidth * 2 / 5 ? 
+//                    (
+//                        window.innerWidth - 24 < 400 ? 
+//                        (window.innerWidth - 24) * 27 / 40 : 
+//                        276
+//                    ) : 
+//                    window.innerWidth * 6 / 25;
 
                 var PSV = PhotoSphereViewer({
                     container: container,
@@ -76,7 +76,7 @@
                         a.push({
                             id: 'waterTemp',
                             html: createPopup('waterTemp'),
-                            content: '<iframe src="http://52.79.130.102:8888/AvgWaterTemp" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>' + average.waterTemp,
+                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgWaterTemp" frameborder="0"></iframe></div>' + average.waterTemp,
                             latitude: 0,
                             longitude: Math.PI,
                             className: 'popup',
@@ -86,7 +86,7 @@
                         a.push({
                             id: 'visibleLight',
                             html: createPopup('visibleLight'),
-                            content: '<iframe src="http://52.79.130.102:8888/AvgVisibleLight" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgVisibleLight" frameborder="0"></iframe></div>',
                             latitude: Math.PI / 4,
                             longitude: Math.PI / 2,
                             className: 'popup',
@@ -96,7 +96,7 @@
                         a.push({
                             id: 'DO',
                             html: createPopup('DO'),
-                            content: '<iframe src="http://52.79.130.102:8888/AvgDO" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgDO" frameborder="0"></iframe></div>',
                             latitude: 0,
                             longitude: Math.PI / 2,
                             className: 'popup',
@@ -106,7 +106,7 @@
                         a.push({
                             id: 'airTemp',
                             html: createPopup('airTemp'),
-                            content: '<iframe src="http://52.79.130.102:8888/AvgAirTemp" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgAirTemp" frameborder="0"></iframe></div>',
                             latitude: Math.PI / 4,
                             longitude: Math.PI * 3 / 2,
                             className: 'popup',
