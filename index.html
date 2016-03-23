@@ -45,207 +45,228 @@
     <body>
         <div id="photosphere"></div>
         <script>
-            var container = document.querySelector("#photosphere");
+            var average = {};
             
-            var PSV = PhotoSphereViewer({
-                container: container,
-                panorama: 'image/farm/farm_bright_04.jpeg',
-                markers: (function() {
-                    var a = [];
-                    a.push({
-                        id: 'waterTemp',
-                        html: createPopup('waterTemp'),
-                        content: '<div><img src="http://52.79.130.102:8888/waterTemp.png" /></div>',
-                        latitude: 0,
-                        longitude: Math.PI,
-                        className: 'popup',
-                        visible: false
-                    });
-                    
-                    a.push({
-                        id: 'visibleLight',
-                        html: createPopup('visibleLight'),
-                        content: '<div><img src="http://52.79.130.102:8888/visibleLight.png" /></div>',
-                        latitude: Math.PI / 4,
-                        longitude: Math.PI / 2,
-                        className: 'popup',
-                        visible: false
-                    });
-                    
-                    a.push({
-                        id: 'DO',
-                        html: createPopup('DO'),
-                        content: '<div><img src="http://52.79.130.102:8888/DO.png" /></div>',
-                        latitude: 0,
-                        longitude: Math.PI / 2,
-                        className: 'popup',
-                        visible: false
-                    });
-                    
-                    a.push({
-                        id: 'airTemp',
-                        html: createPopup('airTemp'),
-                        content: '<div><img src="http://52.79.130.102:8888/airTemp.png" /></div>',
-                        latitude: Math.PI / 4,
-                        longitude: Math.PI * 3 / 2,
-                        className: 'popup',
-                        visible: false
-                    });
-                    
-                    return a;
-                }()),
-                caption: 'FarmView &copy <img src="image/gnb_logo_white.png" />',
-                navbar: [
-                    'autorotate', 'zoom',
-                    {
-                        title: 'DataView',
-                        className: 'compressed-button',
-                        content: '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" enable-background="0 0 41 41"><g transform="translate(-5, 48) scale(0.0175, -0.0175)" fill="#272727" stroke="none"><path d="M320 2470 c-20 -20 -20 -33 -20 -984 0 -870 2 -964 16 -970 9 -3 532 -6 1163 -6 879 0 1150 3 1159 12 16 16 15 75 0 85 -7 4 -510 10 -1118 13 l-1105 5 -5 917 c-5 902 -5 917 -25 932 -27 21 -41 20 -65 -4z" id="node1" class="node"></path><path d="M2451 1943 l-114 -115 -86 86 c-51 50 -95 86 -106 86 -13 0 -141 -121 -360 -340 -187 -187 -348 -340 -357 -340 -9 0 -85 68 -168 150 -84 83 -158 150 -166 150 -7 0 -124 -111 -259 -246 -260 -261 -271 -276 -220 -310 23 -15 27 -15 50 0 13 9 112 104 219 211 106 107 200 195 207 195 8 0 83 -68 166 -150 84 -83 161 -150 170 -150 10 0 171 153 358 340 198 198 348 340 359 340 10 0 55 -36 99 -80 45 -44 87 -79 93 -78 7 2 80 69 164 150 140 137 151 150 148 180 -3 31 -6 33 -43 34 -38 2 -45 -3 -154 -113z" id="node2" class="node"></path></g><g transform="translate(-5, 48) scale(0.0175, -0.0175)" fill="#FFFFFF" stroke="none"></g></svg>',
-                        onClick: addDataMenu()
-                    },
-                    {
-                        title: 'Water temperature',
-                        className: 'custom-button',
-                        content: '수온',
-                        onClick: togglePopup('waterTemp')
-                    },
-                    {
-                        title: 'Visible light',
-                        className: 'custom-button',
-                        content: '햇빛',
-                        onClick: togglePopup('visibleLight')
-                    },
-                    {
-                        title: 'DO',
-                        className: 'custom-button',
-                        content: 'DO',
-                        onClick: togglePopup('DO')
-                    },
-                    {
-                        title: 'Air temperature',
-                        className: 'custom-button',
-                        content: '기온',
-                        onClick: togglePopup('airTemp')
-                    },
-                    'caption', 'gyroscope', 'fullscreen'
-                ]
-            });
-            
-            var popupMarkers = [];
-            
-            var currentPos = {
-                longitude: new Number(),
-                latitude: new Number()
-            };
-            
-            var customButtons;
-            
-            PSV.on('ready', function() {
-                customButtons = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
-                
-                blinkButtons();
-                
-                currentPos.longitude = PSV.config.longitude !== undefined ? PSV.config.longitude : PSV.config.default_long;
-                currentPos.latitude = PSV.config.latitude !== undefined ? PSV.config.latitude : PSV.config.default_lat;
-                
-                popupMarkers = Object.keys(PSV.hud.markers).filter(function(element) {
-                    var currentMarker = PSV.getMarker(element);
-                    if(currentMarker.className && currentMarker.className.match(/popup/)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                
-                popupMarkers.forEach(function(element) {
-                    console.log(element);
-                    var newDiv = document.createElement("div");
-                    newDiv.classList.add("floating", element);
-                    newDiv.innerHTML = createPopup(element);
-                    document.querySelector("#photosphere").appendChild(newDiv);
-                });
-                
-                setTimeout(function() {
-                    var floatings = document.querySelectorAll(".floating");
-                    for(i = 0; i < floatings.length; i++) {
-                        floatings[i].classList.add("disappear");
-                    }
-                }, 1000);
-            });
-            
-            PSV.on('click', function() {
-                document.querySelector(".psv-navbar .psv-button.compressed-button").classList.remove("phase");
-
-                for(i = 0; i < customButtons.length; i++) {
-                    customButtons[i].classList.remove("phase");
+            $.ajax({
+                url: "http://52.79.130.102:8888/average.json",
+                dataType: "jsonp",
+                jsonpCallback: "parseData",
+                success: function(data) {
+                    average = data;
+                    psvScript();
                 }
             });
             
-            PSV.on('position-updated', function(pos) {
-                currentPos = pos;
-            });
-            
-            PSV.on('close-panel', function() {
-                PSV.hud.psv.trigger('unselect-marker');
-            });
-            
-            PSV.on('unselect-marker', function() {
-                popupMarkers.forEach(function(element) {
-                    PSV.updateMarker({
-                        id: element,
-                        visible: false
-                    });
-                });
-            });
-            
-            function createPopup(markerID) {
-                return '<div class="circle ' + markerID + '"><img src="image/icon_' + markerID + '.png" /></div><div></div>';
-            }
-            
-            function togglePopup(markerID) {
-                return function() {
-                    if(PSV.getCurrentMarker() !== null && document.querySelector("#psv-marker-" + markerID).classList.contains("visible")) {
-                        PSV.hidePanel();
-                        PSV.hud.psv.trigger('unselect-marker');
-                    } else {
-                        if(PSV.getCurrentMarker() !== null && PSV.getCurrentMarker().id !== markerID) {
-                            PSV.hidePanel();
-                        }
-                        
-                        PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
-                    
-                        PSV.gotoMarker(markerID, 500);
+            function psvScript() {
+                var container = document.querySelector("#photosphere");
 
-                        PSV.updateMarker({
-                            id: markerID,
-                            visible: true
+                var iframeHeight = 400 >= window.innerWidth * 2 / 5 ? 
+                    (
+                        window.innerWidth - 24 < 400 ? 
+                        (window.innerWidth - 24) * 27 / 40 : 
+                        276
+                    ) : 
+                    window.innerWidth * 6 / 25;
+
+                var PSV = PhotoSphereViewer({
+                    container: container,
+                    panorama: 'image/farm/farm_bright_04.jpeg',
+                    markers: (function() {
+                        var a = [];
+                        a.push({
+                            id: 'waterTemp',
+                            html: createPopup('waterTemp'),
+                            content: '<iframe src="http://52.79.130.102:8888/AvgWaterTemp" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>' + average.waterTemp,
+                            latitude: 0,
+                            longitude: Math.PI,
+                            className: 'popup',
+                            visible: false
                         });
 
-                        setTimeout(function(){
-                            PSV.showPanel(PSV.getMarker(markerID).content);
+                        a.push({
+                            id: 'visibleLight',
+                            html: createPopup('visibleLight'),
+                            content: '<iframe src="http://52.79.130.102:8888/AvgVisibleLight" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            latitude: Math.PI / 4,
+                            longitude: Math.PI / 2,
+                            className: 'popup',
+                            visible: false
+                        });
 
-                            PSV.hud.currentMarker = PSV.getMarker(markerID);
-                        }, 500);
-                    }
-                }
-            }
-            
-            function addDataMenu() {
-                return function() {
-                    document.querySelector(".psv-navbar .psv-button.compressed-button").classList.add("phase");
+                        a.push({
+                            id: 'DO',
+                            html: createPopup('DO'),
+                            content: '<iframe src="http://52.79.130.102:8888/AvgDO" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            latitude: 0,
+                            longitude: Math.PI / 2,
+                            className: 'popup',
+                            visible: false
+                        });
+
+                        a.push({
+                            id: 'airTemp',
+                            html: createPopup('airTemp'),
+                            content: '<iframe src="http://52.79.130.102:8888/AvgAirTemp" frameborder="0" width="100%" height="' + iframeHeight + '"></iframe>',
+                            latitude: Math.PI / 4,
+                            longitude: Math.PI * 3 / 2,
+                            className: 'popup',
+                            visible: false
+                        });
+
+                        return a;
+                    }()),
+                    caption: 'FarmView &copy <img src="image/gnb_logo_white.png" />',
+                    navbar: [
+                        'autorotate', 'zoom',
+                        {
+                            title: 'DataView',
+                            className: 'compressed-button',
+                            content: '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" enable-background="0 0 41 41"><g transform="translate(-5, 48) scale(0.0175, -0.0175)" fill="#272727" stroke="none"><path d="M320 2470 c-20 -20 -20 -33 -20 -984 0 -870 2 -964 16 -970 9 -3 532 -6 1163 -6 879 0 1150 3 1159 12 16 16 15 75 0 85 -7 4 -510 10 -1118 13 l-1105 5 -5 917 c-5 902 -5 917 -25 932 -27 21 -41 20 -65 -4z" id="node1" class="node"></path><path d="M2451 1943 l-114 -115 -86 86 c-51 50 -95 86 -106 86 -13 0 -141 -121 -360 -340 -187 -187 -348 -340 -357 -340 -9 0 -85 68 -168 150 -84 83 -158 150 -166 150 -7 0 -124 -111 -259 -246 -260 -261 -271 -276 -220 -310 23 -15 27 -15 50 0 13 9 112 104 219 211 106 107 200 195 207 195 8 0 83 -68 166 -150 84 -83 161 -150 170 -150 10 0 171 153 358 340 198 198 348 340 359 340 10 0 55 -36 99 -80 45 -44 87 -79 93 -78 7 2 80 69 164 150 140 137 151 150 148 180 -3 31 -6 33 -43 34 -38 2 -45 -3 -154 -113z" id="node2" class="node"></path></g><g transform="translate(-5, 48) scale(0.0175, -0.0175)" fill="#FFFFFF" stroke="none"></g></svg>',
+                            onClick: addDataMenu()
+                        },
+                        {
+                            title: 'Water temperature',
+                            className: 'custom-button',
+                            content: '수온',
+                            onClick: togglePopup('waterTemp')
+                        },
+                        {
+                            title: 'Visible light',
+                            className: 'custom-button',
+                            content: '햇빛',
+                            onClick: togglePopup('visibleLight')
+                        },
+                        {
+                            title: 'DO',
+                            className: 'custom-button',
+                            content: 'DO',
+                            onClick: togglePopup('DO')
+                        },
+                        {
+                            title: 'Air temperature',
+                            className: 'custom-button',
+                            content: '기온',
+                            onClick: togglePopup('airTemp')
+                        },
+                        'caption', 'gyroscope', 'fullscreen'
+                    ]
+                });
+
+                var popupMarkers = [];
+
+                var currentPos = {
+                    longitude: new Number(),
+                    latitude: new Number()
+                };
+
+                var customButtons;
+
+                PSV.on('ready', function() {
+                    customButtons = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
+
+                    blinkButtons();
+
+                    currentPos.longitude = PSV.config.longitude !== undefined ? PSV.config.longitude : PSV.config.default_long;
+                    currentPos.latitude = PSV.config.latitude !== undefined ? PSV.config.latitude : PSV.config.default_lat;
+
+                    popupMarkers = Object.keys(PSV.hud.markers).filter(function(element) {
+                        var currentMarker = PSV.getMarker(element);
+                        if(currentMarker.className && currentMarker.className.match(/popup/)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    popupMarkers.forEach(function(element) {
+                        var newDiv = document.createElement("div");
+                        newDiv.classList.add("floating", element);
+                        newDiv.innerHTML = createPopup(element);
+                        document.querySelector("#photosphere").appendChild(newDiv);
+                    });
+
+                    setTimeout(function() {
+                        var floatings = document.querySelectorAll(".floating");
+                        for(i = 0; i < floatings.length; i++) {
+                            floatings[i].classList.add("disappear");
+                        }
+                    }, 1000);
+                });
+
+                PSV.on('click', function() {
+                    document.querySelector(".psv-navbar .psv-button.compressed-button").classList.remove("phase");
 
                     for(i = 0; i < customButtons.length; i++) {
-                        btn[i].classList.add("phase");
+                        customButtons[i].classList.remove("phase");
+                    }
+                });
+
+                PSV.on('position-updated', function(pos) {
+                    currentPos = pos;
+                });
+
+                PSV.on('close-panel', function() {
+                    PSV.hud.psv.trigger('unselect-marker');
+                });
+
+                PSV.on('unselect-marker', function() {
+                    popupMarkers.forEach(function(element) {
+                        PSV.updateMarker({
+                            id: element,
+                            visible: false
+                        });
+                    });
+                });
+
+                function createPopup(markerID) {
+                    return '<div class="circle ' + markerID + '"><img src="image/icon_' + markerID + '.png" /></div><div></div>';
+                }
+
+                function togglePopup(markerID) {
+                    return function() {
+                        if(PSV.getCurrentMarker() !== null && document.querySelector("#psv-marker-" + markerID).classList.contains("visible")) {
+                            PSV.hidePanel();
+                            PSV.hud.psv.trigger('unselect-marker');
+                        } else {
+                            if(PSV.getCurrentMarker() !== null && PSV.getCurrentMarker().id !== markerID) {
+                                PSV.hidePanel();
+                            }
+
+                            PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
+
+                            PSV.gotoMarker(markerID, 500);
+
+                            PSV.updateMarker({
+                                id: markerID,
+                                visible: true
+                            });
+
+                            setTimeout(function(){
+                                PSV.showPanel(PSV.getMarker(markerID).content);
+
+                                PSV.hud.currentMarker = PSV.getMarker(markerID);
+                            }, 500);
+                        }
                     }
                 }
-            }
-            
-            function blinkButtons() {
-                setInterval(function() {
-                    for(i = 0; i < customButtons.length; i++) {
-                        customButtons[i].classList.toggle("on");
+
+                function addDataMenu() {
+                    return function() {
+                        document.querySelector(".psv-navbar .psv-button.compressed-button").classList.add("phase");
+
+                        for(i = 0; i < customButtons.length; i++) {
+                            customButtons[i].classList.add("phase");
+                        }
                     }
-                }, 1000);
+                }
+
+                function blinkButtons() {
+                    setInterval(function() {
+                        for(i = 0; i < customButtons.length; i++) {
+                            customButtons[i].classList.toggle("on");
+                        }
+                    }, 1000);
+                }
             }
         </script>
     </body>
