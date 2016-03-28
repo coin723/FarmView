@@ -7,57 +7,53 @@
 }
 
 body {
-    font-family: 'Nanum Barun Gothic';
+    font: 16px 'Nanum Barun Gothic';
 }
 
-.floating {
-    top: 30%;
-    position: absolute;
-    transition: all 1s ease-in;
-}
-
-.floating.waterTemp {
-    left: 10%;
-}
-
-.floating.visibleLight {
-    left: 30%;
-}
-
-.floating.DO {
-    left: 50%;
-}
-
-.floating.airTemp {
-    left: 70%;
-}
-
-.floating.disappear {
-    transform: scale(0);
-}
-
-.floating.disappear {
-    top: calc(100% - 200px);
-}
-
-.floating.waterTemp.disappear {
-    left: 60px;
-}
-
-.floating.visibleLight.disappear {
-    left: 110px;
-}
-
-.floating.DO.disappear {
-    left: 160px;
-}
-
-.floating.airTemp.disappear {
-    left: 210px;
+.psv-navbar {
+    background-color: #FFFFFF;
 }
 
 .psv-navbar .psv-caption {
-    font-family: 'Nanum Barun Gothic';
+    font: 16px 'Nanum Barun Gothic';
+    color: #044437;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+.psv-navbar .psv-caption img {
+    height: .75em;
+    width: auto;
+}
+
+@media (max-width: 800px) {
+    .psv-navbar .psv-caption {
+        visibility: visible;
+    }
+}
+
+@media (max-width: 600px) {
+    .psv-navbar .psv-caption {
+        visibility: hidden;
+    }
+}
+
+.psv-navbar .psv-button {
+    color: #044437;
+}
+
+.psv-navbar .psv-button svg * {
+    fill: #044437;
+}
+
+.psv-navbar .psv-button.autorotate-button svg path:nth-child(2) {
+    fill: none;
+    stroke-width: 2;
+    stroke: #044437;
+}
+
+.psv-navbar .zoom-button .range .line, .psv-navbar .zoom-button .range .handle {
+    background: #044437;
 }
 
 .psv-navbar .psv-button.compressed-button {
@@ -67,87 +63,100 @@ body {
 .psv-navbar .psv-button.custom-button {
     width: auto;
     text-align: center;
-    transform: scale(1);
-    transition: transform .3s ease, text-shadow 1s ease;
+    margin-top: 2px;
 }
 
-.psv-navbar .psv-button.compressed-button:hover svg {
-    transform: scale(1.2);
-}
-
-.psv-navbar .psv-button.custom-button:hover {
-    transform: scale(1.2);
-}
-
-.psv-navbar .psv-button.custom-button.on[title="Water temperature"] {
-    text-shadow: 0px 0px 8px aqua, 0px 0px 8px aqua;
-}
-
-.psv-navbar .psv-button.custom-button.on[title="Visible light"] {
-    text-shadow: 0px 0px 8px yellow, 0px 0px 8px yellow;
-}
-
-.psv-navbar .psv-button.custom-button.on[title="DO"] {
-    text-shadow: 0px 0px 8px lime, 0px 0px 8px lime;
-}
-
-.psv-navbar .psv-button.custom-button.on[title="Air temperature"] {
-    text-shadow: 0px 0px 8px white, 0px 0px 8px white;
-}
-
-.psv-hud .psv-marker.popup, .floating {
-    padding: 1em;
-    font-size: 3em;
-    text-align: center;
-}
-
-.psv-hud .psv-marker.popup .circle, .floating .circle {
-    width: 5em;
-    height: 5em;
-    border-radius: 50%;
-    padding: .3em;
-}
-
-.circle.waterTemp {
-    background-color: aqua;
-}
-
-.circle.visibleLight {
-    background-color: #F2CF2D;
-}
-
-.circle.DO {
-    background-color: #68BFEA;
-}
-
-.circle.airTemp {
-    background-color: #A3D850;
-}
-
-.psv-hud .psv-marker.popup p, .floating p {
-    color: white;
-    text-shadow: 0px 0px 16px black;
-}
-
-.psv-hud .psv-marker.popup .circle img , .floating .circle img {
-    width: auto;
-    height: 4em;
+.psv-navbar .psv-button.custom-button:hover, .psv-navbar .psv-button.custom-button.clicked {
+    border-top: 2px inset;
+    padding-top: 8px;
 }
 
 .psv-panel {
-    min-width: 40vw;
+    background: rgba(255, 255, 255, .75);
+    width: 65vmin;
+    top: 10vh;
+    right: 10vw;
+}
+
+.psv-container.has-navbar .psv-panel {
+    height: 70vmin;
+}
+
+.psv-container .psv-panel .content .main {
+    width: calc(65vmin - 2em);
+    height: calc(36.56vmin - 1.125em);
+}
+
+.psv-panel.open .resizer, .psv-panel.open .close-button {
+    display: none;
 }
 
 .psv-panel .content {
-    font-family: 'Nanum Barun Gothic';
+    font: 3vmin 'Nanum Barun Gothic';
+    color: #044437;
 }
 
+.psv-panel .content .title {
+    width: 2em;
+    text-align: center;
+    margin-bottom: 4px;
+    border-bottom: 2px solid #044437;
+    display: inline-block;
+}
+
+.psv-panel .content .icon {
+    width: 2em;
+    height: 30px;
 /*
-.psv-panel .content iframe {
+    margin-top: 4px;
+    border-top: 2px solid #044437;
+*/
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.psv-panel .content .sub {
+    display: inline-block;
+    width: 29%;
+    height: auto;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.psv-panel .content .sub .icon, .psv-panel .content .sub .graph {
+    height: 10vmin;
+    margin-top: 0px;
+    border-top: none;
+}
+
+.psv-panel .content .sub .icon {
+    width: 10vmin;
+    margin: auto;
+    padding-top: calc(5vmin - .5em);
+}
+
+.psv-panel .content .sub .graph {
+    width: 100%;
+    margin: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.psv-panel .content .sub .icon svg {
     width: 100%;
     height: 100%;
 }
-*/
+
+.psv-panel .content .sub .icon .text {
+    margin: auto;
+}
+
+.psv-panel .content .sub.graph {
+    width: 40%;
+    height: calc(10vmin + 1em);
+}
 
 @media screen and (max-aspect-ratio: 1/1) {
     .psv-hud .psv-marker.popup:not(.svg-marker) {
@@ -155,7 +164,7 @@ body {
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 319px) {
     .psv-navbar .psv-button.custom-button {
         display: none;
     }
@@ -176,20 +185,4 @@ body {
 iframe {
     width: 100%;
     height: 100%;
-}
-
-.psv-panel .content .main {
-    height: 24vw;
-}
-
-@media (max-width: 1000px) {
-    .psv-panel .content .main {
-        height: calc(67.5vw - 16.2px);
-    }
-}
-
-@media (max-width: 1000px) and (min-width: 424px) {
-    .psv-panel .content .main {
-        height: 276px;
-    }
 }

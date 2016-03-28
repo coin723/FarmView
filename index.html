@@ -24,7 +24,6 @@
         <script src="https://cdn.rawgit.com/mistic100/uEvent/master/uevent.min.js"></script>
         <script src="https://cdn.rawgit.com/mistic100/Photo-Sphere-Viewer/master/dist/photo-sphere-viewer.js"></script>
         
-        <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
         <script src="http://code.jquery.com/jquery-2.2.2.min.js"></script>
         
         <style>
@@ -58,15 +57,14 @@
             });
             
             function psvScript() {
+                var title = {
+                    waterTemp: 'Water temperature',
+                    visibleLight: 'Visible light',
+                    DO: 'DO',
+                    airTemp: 'Air temperature'
+                };
+                
                 var container = document.querySelector("#photosphere");
-
-//                var iframeHeight = 400 >= window.innerWidth * 2 / 5 ? 
-//                    (
-//                        window.innerWidth - 24 < 400 ? 
-//                        (window.innerWidth - 24) * 27 / 40 : 
-//                        276
-//                    ) : 
-//                    window.innerWidth * 6 / 25;
 
                 var PSV = PhotoSphereViewer({
                     container: container,
@@ -75,8 +73,8 @@
                         var a = [];
                         a.push({
                             id: 'waterTemp',
-                            html: createPopup('waterTemp'),
-                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgWaterTemp" frameborder="0"></iframe></div>' + average.waterTemp,
+                            html: '<div></div>',
+                            content: '<div class="title">수온</div><div class="icon" style="background-image: url(\'image/icon_waterTemp.png\');"></div><div class="main"><iframe src="http://52.79.130.102:8888/AvgWaterTemp" frameborder="0"></iframe></div><div class="sub">최적 수온<div class="icon" style="background-image: url(\'image/icon_good.png\')"><div class="text">19°C</div></div></div><div class="sub">평균 수온<div class="icon" style="background-image: url(\'image/icon_average.png\')"><div class="text">' + Math.round(average.waterTemp) + '°C</div></div></div><div class="sub graph"><iframe src="http://52.79.130.102:8888/AvgWaterTemp/histogram.html" frameborder="0"></div>',
                             latitude: 0,
                             longitude: Math.PI,
                             className: 'popup',
@@ -85,8 +83,8 @@
 
                         a.push({
                             id: 'visibleLight',
-                            html: createPopup('visibleLight'),
-                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgVisibleLight" frameborder="0"></iframe></div>',
+                            html: '<div></div>',
+                            content: '<div class="title">햇빛</div><div class="icon" style="background-image: url(\'image/icon_visibleLight.png\');"></div><div class="main"><iframe src="http://52.79.130.102:8888/AvgVisibleLight" frameborder="0"></iframe></div><div class="sub">오늘 날씨<div class="graph"><iframe src="http://52.79.130.102:8888/info_visibleLight.html" frameborder="0"></iframe></div></div><div class="sub">하늘 상태<div class="graph icon" style="background-image: url(\'image/icon_average.png\')"><iframe src="http://52.79.130.102:8888/info_visibleLight_2.html" frameborder="0"></iframe></div></div><div class="sub graph"><iframe src="http://52.79.130.102:8888/AvgVisibleLight/histogram.html" frameborder="0"></div>',
                             latitude: Math.PI / 4,
                             longitude: Math.PI / 2,
                             className: 'popup',
@@ -95,8 +93,8 @@
 
                         a.push({
                             id: 'DO',
-                            html: createPopup('DO'),
-                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgDO" frameborder="0"></iframe></div>',
+                            html: '<div></div>',
+                            content: '<div class="title">DO</div><div style="display: inline-block;"> (용존산소량)</div><div class="icon" style="background-image: url(\'image/icon_DO.png\');"></div><div class="main"><iframe src="http://52.79.130.102:8888/AvgDO" frameborder="0"></iframe></div><div class="sub">수질 기준<div class="graph"><iframe src="http://52.79.130.102:8888/info_DO.html" frameborder="0"></iframe></div></div><div class="sub">평균 DO<div class="icon" style="background-image: url(\'image/icon_average.png\')"><div class="text">' + Math.round(average.DO) + 'ppm</div></div></div><div class="sub graph"><iframe src="http://52.79.130.102:8888/AvgDO/histogram.html" frameborder="0"></div>',
                             latitude: 0,
                             longitude: Math.PI / 2,
                             className: 'popup',
@@ -105,8 +103,8 @@
 
                         a.push({
                             id: 'airTemp',
-                            html: createPopup('airTemp'),
-                            content: '<div class="main"><iframe src="http://52.79.130.102:8888/AvgAirTemp" frameborder="0"></iframe></div>',
+                            html: '<div></div>',
+                            content: '<div class="title">기온</div><div class="icon" style="background-image: url(\'image/icon_airTemp.png\');"></div><div class="main"><iframe src="http://52.79.130.102:8888/AvgAirTemp" frameborder="0"></iframe></div><div class="sub">최적 기온<div class="icon" style="background-image: url(\'image/icon_good.png\')"><div class="text">19°C</div></div></div><div class="sub">평균 기온<div class="icon" style="background-image: url(\'image/icon_average.png\')"><div class="text">' + Math.round(average.airTemp) + '°C</div></div></div><div class="sub graph"><iframe src="http://52.79.130.102:8888/AvgAirTemp/histogram.html" frameborder="0"></div>',
                             latitude: Math.PI / 4,
                             longitude: Math.PI * 3 / 2,
                             className: 'popup',
@@ -115,9 +113,9 @@
 
                         return a;
                     }()),
-                    caption: 'FarmView &copy <img src="image/gnb_logo_white.png" />',
+                    caption: 'FarmView &copy <img src="image/gnb_logo.png" />',
                     navbar: [
-                        'autorotate', 'zoom',
+                        'autorotate', 'zoom', 'spacer-5', 'spacer-4',
                         {
                             title: 'DataView',
                             className: 'compressed-button',
@@ -129,26 +127,26 @@
                             className: 'custom-button',
                             content: '수온',
                             onClick: togglePopup('waterTemp')
-                        },
+                        }, 'spacer-3',
                         {
                             title: 'Visible light',
                             className: 'custom-button',
                             content: '햇빛',
                             onClick: togglePopup('visibleLight')
-                        },
+                        }, 'spacer-3',
                         {
                             title: 'DO',
                             className: 'custom-button',
                             content: 'DO',
                             onClick: togglePopup('DO')
-                        },
+                        }, 'spacer-3',
                         {
                             title: 'Air temperature',
                             className: 'custom-button',
                             content: '기온',
                             onClick: togglePopup('airTemp')
                         },
-                        'caption', 'gyroscope', 'fullscreen'
+                        'caption', 'gyroscope'
                     ]
                 });
 
@@ -164,33 +162,8 @@
                 PSV.on('ready', function() {
                     customButtons = document.querySelectorAll(".psv-navbar .psv-button.custom-button");
 
-                    blinkButtons();
-
                     currentPos.longitude = PSV.config.longitude !== undefined ? PSV.config.longitude : PSV.config.default_long;
                     currentPos.latitude = PSV.config.latitude !== undefined ? PSV.config.latitude : PSV.config.default_lat;
-
-                    popupMarkers = Object.keys(PSV.hud.markers).filter(function(element) {
-                        var currentMarker = PSV.getMarker(element);
-                        if(currentMarker.className && currentMarker.className.match(/popup/)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-
-                    popupMarkers.forEach(function(element) {
-                        var newDiv = document.createElement("div");
-                        newDiv.classList.add("floating", element);
-                        newDiv.innerHTML = createPopup(element);
-                        document.querySelector("#photosphere").appendChild(newDiv);
-                    });
-
-                    setTimeout(function() {
-                        var floatings = document.querySelectorAll(".floating");
-                        for(i = 0; i < floatings.length; i++) {
-                            floatings[i].classList.add("disappear");
-                        }
-                    }, 1000);
                 });
 
                 PSV.on('click', function() {
@@ -208,44 +181,36 @@
                 PSV.on('close-panel', function() {
                     PSV.hud.psv.trigger('unselect-marker');
                 });
-
-                PSV.on('unselect-marker', function() {
-                    popupMarkers.forEach(function(element) {
-                        PSV.updateMarker({
-                            id: element,
-                            visible: false
-                        });
-                    });
+                
+                PSV.on('select-marker', function(marker) {
+                    for(i = 0; i < customButtons.length; i++) {
+                        if(customButtons[i].getAttribute("title") === title[marker.id]) {
+                            customButtons[i].classList.add("clicked");
+                        }
+                    }
                 });
 
-                function createPopup(markerID) {
-                    return '<div class="circle ' + markerID + '"><img src="image/icon_' + markerID + '.png" /></div><div></div>';
-                }
+                PSV.on('unselect-marker', function() {
+                    for(i = 0; i < customButtons.length; i++) {
+                        customButtons[i].classList.remove("clicked");
+                    }
+                });
 
                 function togglePopup(markerID) {
                     return function() {
-                        if(PSV.getCurrentMarker() !== null && document.querySelector("#psv-marker-" + markerID).classList.contains("visible")) {
-                            PSV.hidePanel();
+                        var lastMarker = PSV.getCurrentMarker();
+                        
+                        if(lastMarker !== null) {
+                            PSV.hud.currentMarker = null;
                             PSV.hud.psv.trigger('unselect-marker');
-                        } else {
-                            if(PSV.getCurrentMarker() !== null && PSV.getCurrentMarker().id !== markerID) {
-                                PSV.hidePanel();
+                            
+                            PSV.hidePanel();
+                            
+                            if(lastMarker.id !== markerID) {
+                                simulateMarkerClick(markerID);
                             }
-
-                            PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
-
-                            PSV.gotoMarker(markerID, 500);
-
-                            PSV.updateMarker({
-                                id: markerID,
-                                visible: true
-                            });
-
-                            setTimeout(function(){
-                                PSV.showPanel(PSV.getMarker(markerID).content);
-
-                                PSV.hud.currentMarker = PSV.getMarker(markerID);
-                            }, 500);
+                        } else {
+                            simulateMarkerClick(markerID);
                         }
                     }
                 }
@@ -259,13 +224,17 @@
                         }
                     }
                 }
-
-                function blinkButtons() {
-                    setInterval(function() {
-                        for(i = 0; i < customButtons.length; i++) {
-                            customButtons[i].classList.toggle("on");
-                        }
-                    }, 1000);
+                
+                function simulateMarkerClick(markerID) {
+                    PSV.hud.psv.trigger('select-marker', PSV.getMarker(markerID));
+                    
+                    PSV.gotoMarker(markerID, 500);
+                    
+                    setTimeout(function(){
+                        PSV.showPanel(PSV.getMarker(markerID).content);
+                        
+                        PSV.hud.currentMarker = PSV.getMarker(markerID);
+                    }, 500);
                 }
             }
         </script>
